@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from http import HTTPStatus
 
 from app.domains.users.actions import \
     get as get_users, \
@@ -13,22 +14,22 @@ app_users = Blueprint('app.users', __name__)
 def post():
     payload = request.get_json()
     user = create_user(payload)
-    return user.serialize(), 201
+    return user.serialize(), HTTPStatus.CREATED
 
 
-@app_users.route('/users/<id>', methods=['PUT'])
+@app_users.route('/users/<int:id>', methods=['PUT'])
 def put(id):
     payload = request.get_json()
     user = update_user(id, payload)
-    return user.serialize(), 200
+    return user.serialize(), HTTPStatus.OK
 
 
 @app_users.route('/users', methods=['GET'])
 def get() -> tuple:
-    return jsonify([user.serialize() for user in get_users()]), 200
+    return jsonify([user.serialize() for user in get_users()]), HTTPStatus.OK
 
 
-@app_users.route('/users/<id>', methods=['GET'])
+@app_users.route('/users/<int:id>', methods=['GET'])
 def get_by_id(id):
     user = get_user_by_id(id)
-    return jsonify(user.serialize()), 200
+    return jsonify(user.serialize()), HTTPStatus.OK

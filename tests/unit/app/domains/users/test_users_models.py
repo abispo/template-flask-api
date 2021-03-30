@@ -1,13 +1,15 @@
 import unittest
 
 from app.domains.users.models import User
-from uuid import uuid4
+from database.repository import save
+from tests.unit import BaseUnitTest
 
 
-class TestUsersModels(unittest.TestCase):
+class TestUsersModels(BaseUnitTest):
     def test_user_model_should_be_serialized(self):
-        id = str(uuid4())
-        user = User(id=id, name='Teste', email='test@test.com')
+        user = save(User(name='Jose', email='jose@email.com'))
         json = user.serialize()
-        self.assertEqual(json['id'], id)
-        self.assertEqual(json['name'], 'Teste')
+
+        self.assertEqual(json['id'], 1)
+        self.assertEqual(json['name'], 'Jose')
+        self.assertEqual(json['email'], 'jose@email.com')
